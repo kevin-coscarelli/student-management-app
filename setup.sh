@@ -19,10 +19,11 @@ then
 else
     echo "Node ya está instalado."
 fi
-if [ -z "$docker_version"]
+if [ -z "$docker_version" ]
 then
     echo "Descargando imagen más nueva de mongodb/mongodb-community-server ..."
     docker pull mongodb/mongodb-community-server
 else
     echo "Puede que Docker no esté instalado o \"WSL Integration\" no esté activado en Docker Desktop."
+fi
 echo "Listo el pollo."
