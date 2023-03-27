@@ -2,7 +2,7 @@ import { connect, disconnect, connection, ObjectId } from 'mongoose'
 import { Carreer } from './schemas/Carreer'
 import { Subject } from './schemas/Subject'
 
-const url = 'mongodb://localhost:27017/paramed'
+export const mongodbUrl = 'mongodb://localhost:27017/paramed'
 
 const carreers = [
     {
@@ -75,7 +75,7 @@ const afterConnection = async () => {
     }))
     const [computerSci, businessAdmin, engineering] = await Promise.all(carreers.map(async (obj, index) => {
         return new Carreer({
-            subject_id: subjectsIds[index],
+            subjects: subjectsIds[index],
             ...obj
         }).save()
     }))
@@ -83,7 +83,7 @@ const afterConnection = async () => {
 
 const run = async () => {
     try {
-        await connect(url)
+        await connect(mongodbUrl)
         // Dropeamos la db antes de volver a poblarla
         connection.dropDatabase()
         await afterConnection()

@@ -8,7 +8,7 @@ const carreerSchema = new Schema({
     notes: String,
     archived: Boolean,
     // @ts-ignore ts(2693)
-    subject_id: [ObjectId]
+    subjects: [{ type: ObjectId, ref: 'Subject' }]
 })
 
 /**
