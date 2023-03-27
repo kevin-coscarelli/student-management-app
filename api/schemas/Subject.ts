@@ -4,14 +4,13 @@ import { basicPreSave } from '../helpers/general'
 const subjectSchema = new Schema({
     // ts se queja porque si.
     // @ts-ignore ts(2693)
-    carreerId: [ObjectId],
-    createdAt: Date,
-    updatedAt: Date,
+    created_at: Date,
+    updated_at: Date,
     name: String,
     note: String,
     archived: Boolean
 })
 
-subjectSchema.pre('save', async function() {basicPreSave(this)})
+subjectSchema.pre('save', function() {basicPreSave(this)})
 
-export const Subject = model('Subject', subjectSchema)
+export const Subject = model('Subject', subjectSchema )

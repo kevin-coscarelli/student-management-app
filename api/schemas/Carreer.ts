@@ -1,18 +1,22 @@
-import { Schema, model } from "mongoose"
+import { Schema, model, ObjectId } from "mongoose"
+import { basicPreSave } from "../helpers/general"
 
 const carreerSchema = new Schema({
-    updatedAt: Date,
-    createdAt: Date,
+    updated_at: Date,
+    created_at: Date,
     name: String,
     notes: String,
-    archived: Boolean
+    archived: Boolean,
+    // @ts-ignore ts(2693)
+    subject_id: [ObjectId]
 })
 
-carreerSchema.pre('save', async function(next) {
-    const rn = new Date()
-    this.updatedAt = rn
-    this.createdAt = rn ?? this.createdAt
-    this.archived = false
-})
+/**
+ * En la linea de abajo pasamos "function() {}" como parametro en lugar de una arrow
+ * function "() => {}" porque function bindea la variable "this". Es posible que
+ * carreerSchema.pre() tome el callback y lo llame con call(), apply() o bind(), que
+ * permiten setear manualmente el valor de "this".
+ */
+carreerSchema.pre('save', function() {basicPreSave(this)})
 
 export const Carreer = model('Carreer', carreerSchema)
