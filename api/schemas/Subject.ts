@@ -1,7 +1,7 @@
 import { Schema, model, ObjectId } from 'mongoose'
 import { basicPreSave } from '../helpers/general'
 
-const subjectSchema = new Schema({
+export const subjectSchema = new Schema({
     // ts se queja porque si.
     // @ts-ignore ts(2693)
     created_at: Date,
@@ -12,5 +12,3 @@ const subjectSchema = new Schema({
 })
 
 subjectSchema.pre('save', function() {basicPreSave(this)})
-
-export const Subject = model('Subject', subjectSchema )

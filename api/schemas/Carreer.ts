@@ -1,7 +1,7 @@
 import { Schema, model, ObjectId } from "mongoose"
 import { basicPreSave } from "../helpers/general"
 
-const carreerSchema = new Schema({
+export const carreerSchema = new Schema({
     updated_at: Date,
     created_at: Date,
     name: String,
@@ -18,5 +18,3 @@ const carreerSchema = new Schema({
  * permiten setear manualmente el valor de "this".
  */
 carreerSchema.pre('save', function() {basicPreSave(this)})
-
-export const Carreer = model('Carreer', carreerSchema)

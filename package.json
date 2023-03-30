@@ -1,12 +1,12 @@
 {
   "scripts": {
-    "dokcer-clean": "docker container prune",
+    "docker-clean": "docker container prune",
     "db-start": "docker run -d -p 27017:27017 mongodb/mongodb-community-server:latest",
     "setup": "./setup.sh",
     "db-seed": "bun run ./api/mockDB.ts",
     "serve": "bun run ./api/server.ts"
   },
-  "dependencies": { "mongodb": "^5.1.0", "mongoose": "^7.0.2" },
+  "dependencies": { "chalk": "^5.2.0", "mongodb": "^5.1.0", "mongoose": "^7.0.2" },
   "devDependencies": {
     "bun-types": "^0.5.8"
   }

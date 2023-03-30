@@ -1,8 +1,9 @@
 import { connect, disconnect, connection, ObjectId } from 'mongoose'
-import { Carreer } from './schemas/Carreer'
-import { Subject } from './schemas/Subject'
+import { models } from './schemas/models'
+import { logger } from './logger'
+import { mongodbUrl } from './helpers/general'
 
-export const mongodbUrl = 'mongodb://localhost:27017/paramed'
+const { Carreer, Subject } = models.get()
 
 const carreers = [
     {
@@ -79,13 +80,17 @@ const afterConnection = async () => {
             ...obj
         }).save()
     }))
+
 }
 
 const run = async () => {
     try {
         await connect(mongodbUrl)
         // Dropeamos la db antes de volver a poblarla
-        connection.dropDatabase()
+        logger('MongoDB', 'db-seed: Dropping database')
+        console.log('mockDB')
+        await connection.dropDatabase()
+        logger('MongoDB', 'db-seed: Populating database')
         await afterConnection()
     } finally {
         await disconnect()

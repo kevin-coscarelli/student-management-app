@@ -1,55 +1,56 @@
-import { connect, disconnect } from "mongoose"
-import { mongodbUrl } from "./mockDB"
-import { Carreer } from "./schemas/Carreer"
+import mongoose, { connect, connection } from "mongoose"
+import { models } from './schemas/models'
+import { logger } from "./logger"
+import { ReqMethods, getEndpointHandler, registerAllEndpoints } from "./EPLogic"
+import { mongodbUrl } from "./helpers/general"
+// @ts-ignore ts(1479)
+import chalk from "chalk"
 
-type EndpointHandler = (req: Request) => Response
-const endpointMap = new Map<string, EndpointHandler>()
+type CarreerT = ReturnType<typeof models.get>['Carreer']
+type SubjectT = ReturnType<typeof models.get>['Subject']
 
-type ReqMethods = 'GET' | 'HEAD' | 'POST' | 'PUT' | 'DELETE' | 'CONNECT' | 'OPTIONS' | 'TRACE' | 'PATCH'
+let Carreer: CarreerT, Subject: SubjectT
+const port = 8081
 
-type RegisterEndpointProps = {
-    url: string,
-    handler: EndpointHandler
-} 
+mongoose.set('strictQuery', false);
+const run = async () => {
+    connection.on('error', (err) => logger('MongoDB', 'MongoDB Error:', err));
+    connection.on('open', () => logger('MongoDB', 'Connected to MongoDB'))
+    connection.on('disconnected', () => logger('MongoDB', 'Disconnected from MongoDB'))
 
-const registerEndpoint = ({ url, handler }: RegisterEndpointProps) => {
-    endpointMap.set(url, handler)
-    console.log(url)
+    await connect(mongodbUrl)
+    Carreer = models.get().Carreer
+    Subject = models.get().Subject
+
+    /**
+     * Registramos los endpoints después de conectarnos a la DB para asegurarnos
+     * de que los modelos estén definidos y que no haya errores.
+     */
+    registerAllEndpoints()
+
+    Bun.serve({
+        port: port,
+        async fetch(req) {
+            const url = new URL(req.url).pathname
+            const method = req.method as ReqMethods
+            logger('HTTP', `${chalk.blue.bold.inverse('REQUEST')}: ${method} ${url}`)
+            const res = await getEndpointHandler(url)(req)
+            logger('HTTP', `${chalk.blue.bold.inverse('RESPONSE')}: ${res.status}: ${url}`, res.body)
+            return res
+        },
+        error(error: Error) {
+            return new Response(`<pre>${error}\n${error.stack}</pre>`, {
+                headers: {
+                    "Content-Type": "text/html",
+                },
+            });
+        },
+    })
+
+    logger('Helper', `HTTP server listening on port ${port}`)
+    logger('HTTP', 'Handling request')
 }
 
-const getEndpointHandler = (url: string) => {
-    const handler = endpointMap.get(url)
-    console.log(endpointMap.keys())
-    if (handler) {
-        return handler
-    }
-
-    return () => new Response('404! Not Found!')
-}
-
-const getCarreersAndSubjects: EndpointHandler = async (req) => {
-    if (req.method === 'GET') {
-        const resPayload = await Carreer.find({}).populate('subjects')
-        console.log(resPayload)
-        return Response.json(JSON.stringify(resPayload))
-    }
-
-    return new Response('Unhandled method')
-}
-
-registerEndpoint({ url: '/api/carreers', handler: getCarreersAndSubjects })
-
-try {
-    connect(mongodbUrl)
-} finally {
-
-}
-Bun.serve({
-    port: 8081, // defaults to $PORT, then 3000
-    fetch(req) {
-        const url = new URL(req.url).pathname
-        const method = req.method as ReqMethods
-        console.log(url, method)
-        return getEndpointHandler(url)(req)
-    },
-})
+run()
+    .catch(console.error)
+    .finally();
