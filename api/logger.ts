@@ -1,3 +1,4 @@
+// @ts-ignore ts(1479)
 import chalk from "chalk"
 
 type LoggerLevels = 'HTTP' | 'MongoDB' | 'Helper'
