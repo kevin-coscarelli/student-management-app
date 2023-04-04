@@ -1,11 +1,4 @@
-import { connect, disconnect, connection, ObjectId } from 'mongoose'
-import { models } from './schemas/models'
-import { logger } from './logger'
-import { mongodbUrl } from './helpers/general'
-
-const { Carreer, Subject, User } = models.get()
-
-const users = [
+export const users = [
     {
         first_name: 'John',
         last_name: 'Doe',
@@ -36,7 +29,7 @@ const users = [
     }
 ]
 
-const carreers = [
+export const carreers = [
     {
         name: 'Computer Science',
         notes: 'Carreer Plan 2013'
@@ -45,7 +38,7 @@ const carreers = [
     { name: 'Engineering' }
 ]
 
-const subjects = [
+export const subjects = [
     [
         'Introduction to Programming',
         'Data Structures and Algorithms',
@@ -91,44 +84,3 @@ const subjects = [
         'Materials Science'
     ]
 ]
-
-const saveSubjects = (subjectsArr: string[]) => {
-    return subjectsArr.map(async (subj) => {
-        const savedSubject = await new Subject({
-            name: subj,
-        }).save()
-        return savedSubject._id
-    })
-}
-
-const afterConnection = async () => {
-    const subjectsIds = await Promise.all(subjects.map(async(subs) => {
-        return await Promise.all(saveSubjects(subs))
-    }))
-    const [computerSci, businessAdmin, engineering] = await Promise.all(carreers.map(async (obj, index) => {
-        return new Carreer({
-            subjects: subjectsIds[index],
-            ...obj
-        }).save()
-    }))
-    const [john, jane, admin] = await Promise.all(users.map(async (obj) => {
-        return new User(obj).save()
-    }))
-
-}
-
-const run = async () => {
-    try {
-        await connect(mongodbUrl)
-        // Dropeamos la db antes de volver a poblarla
-        logger('MongoDB', 'db-seed: Dropping database')
-        console.log('mockDB')
-        await connection.dropDatabase()
-        logger('MongoDB', 'db-seed: Populating database')
-        await afterConnection()
-    } finally {
-        await disconnect()
-        process.exit()
-    }
-}
-run()
