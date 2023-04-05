@@ -41,7 +41,7 @@ const carreers = [
         name: 'Computer Science',
         notes: 'Carreer Plan 2013'
     },
-    { name:'Business Administration' },
+    { name: 'Business Administration' },
     { name: 'Engineering' }
 ]
 
@@ -102,7 +102,7 @@ const saveSubjects = (subjectsArr: string[]) => {
 }
 
 const afterConnection = async () => {
-    const subjectsIds = await Promise.all(subjects.map(async(subs) => {
+    const subjectsIds = await Promise.all(subjects.map(async (subs) => {
         return await Promise.all(saveSubjects(subs))
     }))
     const [computerSci, businessAdmin, engineering] = await Promise.all(carreers.map(async (obj, index) => {
@@ -112,7 +112,10 @@ const afterConnection = async () => {
         }).save()
     }))
     const [john, jane, admin] = await Promise.all(users.map(async (obj) => {
-        return new User(obj).save()
+        return new User({
+            carreers: (obj.type === 'student' || obj.type === 'teacher') && computerSci._id,
+            subjects: (obj.type === 'student' || obj.type === 'teacher') && [subjectsIds[0][0], subjectsIds[0][1]]
+        }).save()
     }))
 
 }

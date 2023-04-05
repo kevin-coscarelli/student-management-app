@@ -1,4 +1,4 @@
-import { Schema } from "mongoose"
+import { Schema, ObjectId } from "mongoose"
 import { basicPreSave } from "../helpers/general"
 import { UserType } from "./enums"
 
@@ -12,7 +12,11 @@ export const userSchema = new Schema({
     email: String,
     password: String,
     active: Boolean,
-    type: UserType
+    type: UserType,
+    // @ts-ignore ts(2693)
+    carreers: [{ type: ObjectId, ref: 'Carreer' }],
+    // @ts-ignore ts(2693)
+    subjects: [{ type: ObjectId, ref: 'Subject' }]
 })
 
 userSchema.pre('save', function() {basicPreSave(this)})
