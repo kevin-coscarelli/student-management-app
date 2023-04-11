@@ -1,12 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
+import { RouterProvider } from 'react-router-dom';
+import { router } from './AppRouter';
 
 const App = () => {
   return (
-    <div>
-      <h1>Hello, world!</h1>
-    </div>
+    <React.StrictMode>
+        <RouterProvider router={router} />
+    </React.StrictMode>
   );
 };
 // @ts-expect-error
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);

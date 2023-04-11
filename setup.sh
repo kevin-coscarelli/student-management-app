@@ -1,29 +1,34 @@
 `#!/bin/bash`
-node_version="$(node -v)"
-bun_version="$(bun -v)"
-docker_version="$(docker -v)"
 
-if [ -z "$bun_version" ]
+if command -v bun &>/dev/null;
 then
-    echo "Instalando Bun..."
-    curl -fsSL https://bun.sh/install | bash
+    echo "> Bun ya está instalado."
 else
-    echo "Bun ya está instalado."
+    echo "> Instalando Bun..."
+    curl -fsSL https://bun.sh/install | bash
 fi
 
-if [ -z "$node_version" ]
+if command -v node &>/dev/null;
 then
-    echo "instalando NodeJS..."
+    echo "> Node ya está instalado."
+else
+    echo "> instalando NodeJS..."
     curl -fsSL https://deb.nodesource.com/setup_19.x | sudo -E bash - &&\
     sudo apt-get install -y nodejs
-else
-    echo "Node ya está instalado."
 fi
-if [ -z "$docker_version" ]
+if command -v docker &>/dev/null;
 then
-    echo "Descargando imagen más nueva de mongodb/mongodb-community-server ..."
-    docker pull mongodb/mongodb-community-server
+    echo "> Docker ya está instalado."
 else
-    echo "Puede que Docker no esté instalado o \"WSL Integration\" no esté activado en Docker Desktop."
+    echo "> Descargando imagen más nueva de mongodb/mongodb-community-server ..."
+    docker pull mongodb/mongodb-community-server
 fi
-echo "Listo el pollo."
+
+if [ -f "$(dirname "$0")/server.key" ] && [ -f "$(dirname "$0")/server.crt" ];
+then
+    echo "> Los archivos de certificados ya existen."
+else
+    echo "> Generando certificados..."
+    ./keygen.sh
+fi
+echo "> Listo el pollo."

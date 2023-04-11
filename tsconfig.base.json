@@ -3,7 +3,8 @@
         "strictPropertyInitialization": false,
         // enable latest features
         "lib": [
-            "esnext"
+            "esnext",
+            "DOM",
         ],
         "module": "esnext",
         "target": "esnext",
@@ -17,8 +18,5 @@
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         // add Bun type definitions
-        "types": [
-            "bun-types"
-        ]
     }
 }

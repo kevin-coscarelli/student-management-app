@@ -1,10 +1,12 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const fs = require('fs')
 
 module.exports = {
     mode: 'development',
     entry: './src/index.tsx',
     output: {
+        publicPath: '/',
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
     },
@@ -37,15 +39,22 @@ module.exports = {
         extensions: ['.tsx', '.ts', '.js'],
     },
     devServer: {
-        static: ['dist'],
         compress: true,
         port: 9000,
         hot: true,
+        historyApiFallback: true,
+        server: {
+            type: 'https',
+            options: {
+                key: fs.readFileSync('../server.key'),
+                cert: fs.readFileSync('../server.crt'),
+            },
+        },
     },
     plugins: [
         new HtmlWebpackPlugin({
-          template: './public/index.html',
-          filename: 'index.html',
+            template: './src/index.html',
+            filename: 'index.html',
         }),
-      ],
-};
+    ],
+}
