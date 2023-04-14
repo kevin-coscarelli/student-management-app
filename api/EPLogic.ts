@@ -1,4 +1,5 @@
 import { carreersAndSubjects } from "./endpoints/CarreersAndSubjects"
+import { login } from "./endpoints/Login"
 
 export type EndpointHandler = (req: Request) => Promise<Response>
 
@@ -12,7 +13,21 @@ type RegisterEndpointProps = {
 const endpointMap = new Map<string, EndpointHandler>()
 
 const registerEndpoint = ({ url, handler }: RegisterEndpointProps) => {
-    endpointMap.set(url, handler)
+    endpointMap.set(url, preflightHandlerDecorator(handler))
+}
+
+/**
+ * La funcion del decorador es interceptar los pedidos OPTIONS y responder con un 204.
+ */
+const preflightHandlerDecorator = (handler: EndpointHandler): EndpointHandler => {
+    return async (req) => {
+        if (req.method === 'OPTIONS') {
+            return new Response('Preflight accepted', {
+                status: 204,
+            })
+        }
+        return handler(req)
+    }
 }
 
 /**
@@ -27,11 +42,10 @@ export const getEndpointHandler = (url: string) => {
     return async () => new Response('404! Not Found!')
 }
 
-// Registro de endpoints
-
 /**
  * Registra todos los endpoint handlers en el Map(), usando el path de la URL como key.
  */
 export const registerAllEndpoints = () => {
     registerEndpoint(carreersAndSubjects)
+    registerEndpoint(login)
 }

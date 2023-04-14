@@ -2,11 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './AppRouter';
+import { MantineProvider } from '@mantine/core';
 
 const App = () => {
   return (
     <React.StrictMode>
-        <RouterProvider router={router} />
+        <MantineProvider withGlobalStyles withNormalizeCSS>
+            <RouterProvider router={router} />
+        </MantineProvider>
     </React.StrictMode>
   );
 };

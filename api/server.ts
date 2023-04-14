@@ -5,12 +5,12 @@ import { ReqMethods, getEndpointHandler, registerAllEndpoints } from "./EPLogic"
 import { mongodbUrl } from "./helpers/general"
 // @ts-ignore ts(1479)
 import chalk from "chalk"
+import { apiPort, clientHost } from "../env"
 
 type CarreerT = ReturnType<typeof models.get>['Carreer']
 type SubjectT = ReturnType<typeof models.get>['Subject']
 
 let Carreer: CarreerT, Subject: SubjectT
-const port = 8081
 
 mongoose.set('strictQuery', false);
 const run = async () => {
@@ -29,12 +29,12 @@ const run = async () => {
     registerAllEndpoints()
 
     Bun.serve({
-        port: port,
+        port: apiPort,
         async fetch(req) {
             const url = new URL(req.url).pathname
             const method = req.method as ReqMethods
             logger('HTTP', `${chalk.blue.bold.inverse('REQUEST')}: ${method} ${url}`)
-            const res = await getEndpointHandler(url)(req)
+            const res = setCORSHeaders(await getEndpointHandler(url)(req))
             logger('HTTP', `${chalk.blue.bold.inverse('RESPONSE')}: ${res.status}: ${url}`, res.body)
             return res
         },
@@ -47,10 +47,18 @@ const run = async () => {
         },
     })
 
-    logger('Helper', `HTTP server listening on port ${port}`)
+    logger('Helper', `HTTP server listening on port ${apiPort}`)
     logger('HTTP', 'Handling request')
 }
 
 run()
     .catch(console.error)
     .finally();
+
+const setCORSHeaders = (res: Response) => {
+    // Aca va el host de los clientes con permiso para hacer pedidos a la API
+    res.headers.set('Access-Control-Allow-Origin', clientHost)
+    res.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+    res.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+    return res
+}

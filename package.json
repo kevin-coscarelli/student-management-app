@@ -1,13 +1,15 @@
 {
   "scripts": {
-    "docker-clean": "docker container prune",
-    "db-start": "docker run -d -p 27017:27017 mongodb/mongodb-community-server:latest",
+    "db-start": "docker run -d -p 27017:27017 -v local-mongo-volume:/data/db mongodb/mongodb-community-server",
     "setup": "./setup.sh",
     "db-seed": "bun run ./api/mockDB.ts",
     "serve-api": "bun run ./api/server.ts",
     "serve-client": "cd client && bunx webpack-dev-server --mode development"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
+    "@mantine/core": "^6.0.7",
+    "@mantine/hooks": "^6.0.7",
     "chalk": "^5.2.0",
     "mongodb": "^5.1.0",
     "mongoose": "^7.0.2",
@@ -24,6 +26,7 @@
     "babel-loader": "^9.1.2",
     "bun-types": "^0.5.8",
     "css-loader": "^6.7.3",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^5.5.0",
     "style-loader": "^3.3.2",
     "ts-loader": "^9.4.2",

@@ -13,6 +13,18 @@ module.exports = {
     module: {
         rules: [
             {
+                test: /\.(jpg|jpeg)$/i,
+                use: [
+                    {
+                        loader: 'file-loader',
+                        options: {
+                            name: '[name].[ext]',
+                            outputPath: 'images/'
+                        }
+                    }
+                ]
+            },
+            {
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
                 use: {
@@ -43,6 +55,9 @@ module.exports = {
         port: 9000,
         hot: true,
         historyApiFallback: true,
+        static: {
+            directory: path.join(__dirname, './'),
+        },
         server: {
             type: 'https',
             options: {

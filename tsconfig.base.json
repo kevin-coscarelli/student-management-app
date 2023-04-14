@@ -18,5 +18,8 @@
         "forceConsistentCasingInFileNames": true,
         "skipLibCheck": true,
         // add Bun type definitions
+        "types": [
+            "bun-types",
+        ],
     }
 }

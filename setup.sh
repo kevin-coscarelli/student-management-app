@@ -1,5 +1,15 @@
 `#!/bin/bash`
 
+docker_volume_check() {
+    if docker volume ls | grep -q "$1";
+    then
+        echo "> El volumen $1 ya existe."
+    else
+        echo "> Creando volumen $1..."
+        docker volume create "$1"
+    fi
+}
+
 if command -v bun &>/dev/null;
 then
     echo "> Bun ya está instalado."
@@ -18,7 +28,7 @@ else
 fi
 if command -v docker &>/dev/null;
 then
-    echo "> Docker ya está instalado."
+    echo "> Puede que Docker no esté instalado o \"WSL Integration\" no esté activado en Docker Desktop."
 else
     echo "> Descargando imagen más nueva de mongodb/mongodb-community-server ..."
     docker pull mongodb/mongodb-community-server
@@ -31,4 +41,7 @@ else
     echo "> Generando certificados..."
     ./keygen.sh
 fi
+
+docker_volume_check "local_mongo_volume"
+
 echo "> Listo el pollo."
