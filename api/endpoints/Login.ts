@@ -3,8 +3,7 @@ import { logger } from "../logger"
 
 const loginHandler: EndpointHandler = async (req) => {
     if (req.method === 'POST') {
-        const { username, password } = await req.json()
-        logger('HTTP', 'Login request', JSON.parse(await req.json())
+        const { username, password } = await req.json() as any
         return Response.json({ username, password })
     }
 

@@ -27,8 +27,9 @@ const afterConnection = async () => {
     }))
     const [john, jane, admin] = await Promise.all(users.map(async (obj) => {
         return new User({
-            carreers: (obj.type === 'student' || obj.type === 'teacher') && computerSci._id,
-            subjects: (obj.type === 'student' || obj.type === 'teacher') && [subjectsIds[0][0], subjectsIds[0][1]]
+            ...obj,
+            carreers: (obj.type === 'student' || obj.type === 'teacher') ? computerSci._id : null,
+            subjects: (obj.type === 'student' || obj.type === 'teacher') ? [subjectsIds[0][0], subjectsIds[0][1]] : null
         }).save()
     }))
 }

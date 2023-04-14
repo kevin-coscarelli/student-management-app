@@ -29,7 +29,7 @@ export const Login = () => {
                 user,
                 password
             }),
-        })
+        }).then(async (res) => alert(await JSON.stringify(res.json())))
     }
 
     return (
