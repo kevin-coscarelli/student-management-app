@@ -7,4 +7,9 @@ Esto es porque `setup.sh` no tiene los permisos de ejecución. Para dárselos ha
 $ chmod +x .-setup.sh
 ```
 Es posible que otras carpetas o archivos tambien tengan permisos insuficientes.
+
+**Esto fue arreglado con un script hook de git que corre al clonar el repo:**
+```
+$ .git/hooks/post-checkout.sh
+```
 ___

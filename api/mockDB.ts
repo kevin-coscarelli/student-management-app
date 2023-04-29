@@ -42,7 +42,11 @@ const run = async () => {
         await connection.dropDatabase()
         logger('MongoDB', 'db-seed: Populating database')
         await afterConnection()
-    } finally {
+    } 
+    catch (error) {
+        logger('MongoDB', 'db-seed: Error populating database', error)
+    }
+    finally {
         await disconnect()
         process.exit()
     }

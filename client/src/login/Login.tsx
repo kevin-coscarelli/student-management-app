@@ -1,12 +1,14 @@
 import { Anchor, Button, Checkbox, Container, Group, Paper, PasswordInput, Text, TextInput, Title } from "@mantine/core"
 //@ts-expect-error
 import cloudsImg from "../../assets/clouds.jpg"
-import { useState } from "react"
+import React, { useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 export const Login = () => {
 
-    const [user, setUser] = useState()
-    const [password, setPassword] = useState()
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const navigate = useNavigate()
 
     const outerStyle: React.CSSProperties = {
         display: 'flex',
@@ -26,10 +28,17 @@ export const Login = () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                user,
+                email,
                 password
             }),
-        }).then(async (res) => alert(await JSON.stringify(res.json())))
+        }).then(async (res) => {
+            if (res.status === 200) {
+                console.log('Login successful')
+                navigate('/home', { replace: true })
+                return 
+            } 
+            return alert(await res.text())
+        })
     }
 
     return (
@@ -47,8 +56,8 @@ export const Login = () => {
 
                 <Paper withBorder shadow="md" p={30} mt={30} radius="md">
                     <TextInput 
-                        value={user}
-                        onChange={(e) => setUser((e.currentTarget as any).value)}
+                        value={email}
+                        onChange={(e) => setEmail((e.currentTarget as any).value)}
                         label="Email"
                         placeholder="juanfake@gmail.com"
                         required

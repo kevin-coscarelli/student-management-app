@@ -8,3 +8,12 @@ export const clientServerKeyPath = 'server.key'
 export const clientServerCertPath = 'server.crt'
 export const apiServerKeyPath = 'server.key'
 export const apiServerCertPath = 'server.crt'
+export const mongoHost = 'localhost'
+export const fakeCryptoSalt = 'fakeCryptoSalt'
+// Cosas de JWT
+export const jwtProps = {
+    issuer: 'UMS',
+    audience: 'UMS Audience',
+    expiresIn: '14d',
+    algorithm: 'SHA256',
+}

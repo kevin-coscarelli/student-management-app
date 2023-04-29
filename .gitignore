@@ -1,5 +1,4 @@
 node_modules/
 bun.lockb
-server.crt
-server.key
+keys/**
 client/dist/

@@ -28,13 +28,13 @@ else
 fi
 if command -v docker &>/dev/null;
 then
-    echo "> Puede que Docker no esté instalado o \"WSL Integration\" no esté activado en Docker Desktop."
-else
     echo "> Descargando imagen más nueva de mongodb/mongodb-community-server ..."
     docker pull mongodb/mongodb-community-server
+else
+    echo "> Puede que Docker no esté instalado o \"WSL Integration\" no esté activado en Docker Desktop."
 fi
 
-if [ -f "$(dirname "$0")/server.key" ] && [ -f "$(dirname "$0")/server.crt" ];
+if [ -f "$(dirname "$0")/keys/server.key" ] && [ -f "$(dirname "$0")/keys/server.crt" ];
 then
     echo "> Los archivos de certificados ya existen."
 else

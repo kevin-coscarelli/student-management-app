@@ -1,7 +1,7 @@
 // @ts-ignore ts(1479)
 import chalk from "chalk"
 
-type LoggerLevels = 'HTTP' | 'MongoDB' | 'Helper'
+type LoggerLevels = 'HTTP' | 'MongoDB' | 'Helper' | string
 type Logger = (level: LoggerLevels, message: string, ...args: any[]) => void
 
 export const logger: Logger = (level, message, ...args) => {
@@ -15,5 +15,7 @@ export const logger: Logger = (level, message, ...args) => {
         case 'Helper':
             console.log(chalk.yellow(`[${level}] ${message}`, ...args))
             break
+        default:
+            console.log(chalk.magenta(`[${level}] ${message}`, ...args))
     }       
 }

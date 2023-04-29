@@ -1,14 +1,17 @@
 const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const webpack = require('webpack')
 const fs = require('fs')
 
 module.exports = {
     mode: 'development',
     entry: './src/index.tsx',
+    devtool: "source-map",
     output: {
         publicPath: '/',
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js',
+        clean: true,
     },
     module: {
         rules: [
@@ -27,12 +30,12 @@ module.exports = {
             {
                 test: /\.(ts|tsx)$/,
                 exclude: /node_modules/,
-                use: {
+                use: [{
                     loader: 'ts-loader',
                     options: {
                         configFile: "tsconfig.webpack.json"
                     }
-                }
+                }]
             },
             {
                 test: /\.(js|jsx)$/,
@@ -64,8 +67,8 @@ module.exports = {
         server: {
             type: 'https',
             options: {
-                key: fs.readFileSync('../server.key'),
-                cert: fs.readFileSync('../server.crt'),
+                key: fs.readFileSync('../keys/server.key'),
+                cert: fs.readFileSync('../keys/server.crt'),
             },
         },
     },
@@ -73,6 +76,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: './src/index.html',
             filename: 'index.html',
+        }),
+        new webpack.ProvidePlugin({
+            React: 'react'
         }),
     ],
 }

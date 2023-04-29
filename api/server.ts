@@ -34,9 +34,12 @@ const run = async () => {
             const url = new URL(req.url).pathname
             const method = req.method as ReqMethods
             logger('HTTP', `${chalk.blue.bold.inverse('REQUEST')}: ${method} ${url}`)
-            const res = setCORSHeaders(await getEndpointHandler(url)(req))
-            logger('HTTP', `${chalk.blue.bold.inverse('RESPONSE')}: ${res.status}: ${url}`, res.body)
-            return res
+
+            const res = await getEndpointHandler(url)(req)
+            const resWithHeaders = setCORSHeaders(res)
+            logger('HTTP', `${chalk.blue.bold.inverse('RESPONSE')}: ${res.status}: ${url}`)
+
+            return resWithHeaders
         },
         error(error: Error) {
             return new Response(`<pre>${error}\n${error.stack}</pre>`, {
@@ -53,7 +56,7 @@ const run = async () => {
 
 run()
     .catch(console.error)
-    .finally();
+    .finally()
 
 const setCORSHeaders = (res: Response) => {
     // Aca va el host de los clientes con permiso para hacer pedidos a la API

@@ -19,6 +19,7 @@
         "skipLibCheck": true,
         // add Bun type definitions
         "outDir": "build",
+        "sourceMap": true,
         "types": [
             "bun-types",
         ],
