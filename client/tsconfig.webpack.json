@@ -18,12 +18,12 @@
         "forceConsistentCasingInFileNames": true,
         "noFallthroughCasesInSwitch": true,
         "noImplicitReturns": true,
-        "noUnusedLocals": true,
+        "noUnusedLocals": false,
         "noUnusedParameters": true,
         "noImplicitAny": true,
         "sourceMap": true,
     },
     "include": [
-        "src"
+        "src",
     ]
 }

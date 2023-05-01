@@ -33,7 +33,8 @@ export const Login = () => {
             }),
         }).then(async (res) => {
             if (res.status === 200) {
-                console.log('Login successful')
+                const token = (await res.json()).JWT
+                localStorage.setItem('token', token)
                 navigate('/home', { replace: true })
                 return 
             } 

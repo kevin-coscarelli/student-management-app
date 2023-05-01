@@ -1,7 +1,7 @@
-import React from 'react'
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { Login } from './login/Login'
-import { getCookie } from './helpers'
+import { Home } from './Home/Home'
+import React from 'react'
 
 export const router = createBrowserRouter([
     {
@@ -14,19 +14,15 @@ export const router = createBrowserRouter([
     },
     {
         path: '/home',
-        element: <div><h1>Home</h1></div>,
-        loader: () => {
-            // Query para probar autenticacion. Deshechar mas adelante.
-            const jwt = getCookie('jwt')
-            console.log(jwt)
-            fetch('http://localhost:8081/api/auth', {
+        element: <Home />,
+        loader: async () => {
+            const carreer = await fetch('http://localhost:8081/api/carreers', {
                 method: 'GET',
                 headers: {
-                    'Content-Type': 'text/plain',
-                    'Authorization': `Bearer ${jwt}`
-                },
+                    'Authorization': `Bearer ${localStorage.getItem('token')}`
+                }                    
             })
-            return null
+            return carreer.json()
         },
     }
 ])

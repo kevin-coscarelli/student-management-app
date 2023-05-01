@@ -1,1 +1,1 @@
-export const getCookie = name => document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2)
+export const getCookie = (name: string) => document.cookie.match(new RegExp(`(^| )${name}=([^;]+)`))?.at(2)

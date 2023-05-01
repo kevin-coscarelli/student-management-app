@@ -62,6 +62,6 @@ const setCORSHeaders = (res: Response) => {
     // Aca va el host de los clientes con permiso para hacer pedidos a la API
     res.headers.set('Access-Control-Allow-Origin', clientHost)
     res.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
-    res.headers.set('Access-Control-Allow-Headers', 'Content-Type')
+    res.headers.set('Access-Control-Allow-Headers', 'Content-Type, Authorization')
     return res
 }
