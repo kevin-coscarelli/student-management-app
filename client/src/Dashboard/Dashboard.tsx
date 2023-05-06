@@ -1,5 +1,6 @@
+import React from "react"
 
-export const Home = (CarreerAndSubjects: any) => {
+export const Dashboard = (CarreerAndSubjects: any) => {
     console.log(CarreerAndSubjects)
     return (
         <div>

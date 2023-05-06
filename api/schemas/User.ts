@@ -16,7 +16,9 @@ export const userSchema = new Schema({
     // @ts-ignore ts(2693)
     carreers: [{ type: ObjectId, ref: 'Carreer' }],
     // @ts-ignore ts(2693)
-    subjects: [{ type: ObjectId, ref: 'Subject' }]
+    subjects: [{ type: ObjectId, ref: 'Subject' }],
+    // @ts-ignore ts(2693)
+    grades: [{ type: ObjectId, ref: 'Grade' }],
 })
 
 userSchema.pre('save', function() {basicPreSave(this)})

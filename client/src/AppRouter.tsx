@@ -1,6 +1,6 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { Login } from './login/Login'
-import { Home } from './Home/Home'
+import { Dashboard } from './Dashboard/Dashboard'
 import React from 'react'
 
 export const router = createBrowserRouter([
@@ -14,7 +14,7 @@ export const router = createBrowserRouter([
     },
     {
         path: '/home',
-        element: <Home />,
+        element: <Dashboard />,
         loader: async () => {
             const carreer = await fetch('http://localhost:8081/api/carreers', {
                 method: 'GET',

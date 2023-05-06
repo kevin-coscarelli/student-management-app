@@ -2,9 +2,9 @@ import { connect, disconnect, connection, ObjectId } from 'mongoose'
 import { models } from './schemas/models'
 import { logger } from './logger'
 import { mongodbUrl } from './helpers/general'
-import { carreers, subjects, users } from './fakeDB'
+import { carreers, subjects, users, grades } from './fakeDB'
 
-const { Carreer, Subject, User } = models.get()
+const { Carreer, Subject, User, Grade } = models.get()
 
 const saveSubjects = (subjectsArr: string[]) => {
     return subjectsArr.map(async (subj) => {
@@ -19,19 +19,31 @@ const afterConnection = async () => {
     const subjectsIds = await Promise.all(subjects.map(async (subs) => {
         return await Promise.all(saveSubjects(subs))
     }))
+
     const [computerSci, businessAdmin, engineering] = await Promise.all(carreers.map(async (obj, index) => {
         return new Carreer({
             subjects: subjectsIds[index],
             ...obj
         }).save()
     }))
+
+    const johnGrades = (await Promise.all(grades.map(async (grade) => {
+        return new Grade({
+            subject: subjectsIds[0][1],
+            ...grade,
+        }).save()
+    }))).map((grade) => grade._id)
+
     const [john, jane, admin] = await Promise.all(users.map(async (obj) => {
         return new User({
             ...obj,
             carreers: (obj.type === 'student' || obj.type === 'teacher') ? computerSci._id : null,
-            subjects: (obj.type === 'student' || obj.type === 'teacher') ? [subjectsIds[0][0], subjectsIds[0][1]] : null
+            subjects: (obj.type === 'student' || obj.type === 'teacher') ? [subjectsIds[0][0], subjectsIds[0][1]] : null,
+            grades: (obj.type === 'student') ? johnGrades : null,
         }).save()
     }))
+
+
 }
 
 const run = async () => {
